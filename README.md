@@ -12,7 +12,7 @@ API REST untuk sistem pencatatan kehadiran mahasiswa dengan validasi GPS dan aut
 
 ## 📖 Deskripsi
 
-Sistem absensi digital yang memungkinkan mahasiswa melakukan check-in/check-out dengan validasi lokasi GPS, serta memudahkan dosen dalam mengelola dan memantau kehadiran mahasiswa secara real-time. [file:1]
+Sistem absensi digital yang memungkinkan mahasiswa melakukan check-in/check-out dengan validasi lokasi GPS, serta memudahkan dosen dalam mengelola dan memantau kehadiran mahasiswa secara real-time. 
 
 ### 🎯 Fitur Utama
 
