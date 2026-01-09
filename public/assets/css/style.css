@@ -1,0 +1,126 @@
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 2px solid #f0f0f0;
+    font-weight: 600;
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+
+.btn-lg {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+}
+
+.table {
+    background-color: white;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Login Page */
+#loginPage .card {
+    border-radius: 15px;
+}
+
+/* Dashboard Cards */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-warning,
+.card.bg-danger,
+.card.bg-info {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
+.card h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Status Badges */
+.status-hadir { background-color: #198754; }
+.status-izin { background-color: #ffc107; color: #000; }
+.status-sakit { background-color: #fd7e14; }
+.status-alpha { background-color: #dc3545; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .table {
+        font-size: 0.85rem;
+    }
+
+    .card h2 {
+        font-size: 2rem;
+    }
+}
+
+/* Loading Spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+/* Alert Animations */
+.alert {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* GPS Button */
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Table Actions */
+.table td {
+    vertical-align: middle;
+}
+
+.table .btn-group .btn {
+    padding: 5px 10px;
+    font-size: 0.875rem;
+}
