@@ -1,12 +1,16 @@
 {
+    "name": "attendance-api",
+    "version": "1.0.0",
     "private": true,
+    "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "echo 'No build needed - using static HTML/CSS/JS'",
+        "production": "echo 'Production ready'"
     },
     "devDependencies": {
-        "axios": "^1.1.2",
-        "laravel-vite-plugin": "^0.7.2",
-        "vite": "^4.0.0"
+        "axios": "^1.7.4",
+        "laravel-vite-plugin": "^1.0",
+        "vite": "^5.0"
     }
 }
