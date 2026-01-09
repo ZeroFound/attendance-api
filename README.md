@@ -1,5 +1,5 @@
 # 📚 API Sistem Absensi Mahasiswa
-
+https://api-absensi-mahasiswa.up.railway.app/
 API REST untuk sistem pencatatan kehadiran mahasiswa dengan validasi GPS dan autentikasi JWT. Dibangun dengan Laravel 10, MySQL, dan JWT Authentication.
 
 ![Laravel](https://img.shields.io/badge/Laravel-10.x-red?style=flat-square&logo=laravel)
