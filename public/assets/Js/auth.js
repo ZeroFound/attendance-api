@@ -1,28 +1,35 @@
 // Authentication Functions
 
-// Login Form Handler
+console.log('🔐 Auth Module loaded');
+
+// Check if already logged in on page load
 document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
+    console.log('🚀 DOM Content Loaded');
 
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', handleRegister);
-    }
-
-    // Check if already logged in
-    if (getToken()) {
+    // Check token
+    const token = getToken();
+    if (token) {
+        console.log('🔑 Token found, initializing app...');
         initApp();
+    } else {
+        console.log('🔓 No token found, showing login page');
     }
 });
 
+// Login Form Handler
 async function handleLogin(e) {
     e.preventDefault();
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+
+    console.log('🔄 Attempting login:', email);
+
+    // Disable submit button
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Loading...';
 
     try {
         const response = await API.login(email, password);
@@ -31,19 +38,27 @@ async function handleLogin(e) {
             setToken(response.token);
             setUser(response.user);
 
-            showAlert('loginAlert', 'Login berhasil! Redirecting...', 'success');
+            showAlert('loginAlert', '✅ Login berhasil! Redirecting...', 'success');
+
+            console.log('✅ Login successful:', response.user.name);
 
             setTimeout(() => {
                 initApp();
             }, 1000);
         } else {
-            showAlert('loginAlert', response.message || 'Login gagal', 'danger');
+            showAlert('loginAlert', '❌ ' + (response.message || 'Login gagal'), 'danger');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
         }
     } catch (error) {
-        showAlert('loginAlert', 'Terjadi kesalahan: ' + error.message, 'danger');
+        showAlert('loginAlert', '❌ Terjadi kesalahan: ' + error.message, 'danger');
+        console.error('Login error:', error);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
     }
 }
 
+// Register Form Handler
 async function handleRegister(e) {
     e.preventDefault();
 
@@ -55,11 +70,24 @@ async function handleRegister(e) {
         npm: document.getElementById('regNPM').value || null
     };
 
+    console.log('🔄 Attempting registration:', data.email);
+
+    // Disable submit button
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Loading...';
+
     try {
         const response = await API.register(data);
 
         if (response.status === 'success') {
-            showAlert('registerAlert', 'Registrasi berhasil! Silakan login.', 'success');
+            showAlert('registerAlert', '✅ Registrasi berhasil! Silakan login.', 'success');
+
+            console.log('✅ Registration successful');
+
+            // Reset form
+            e.target.reset();
 
             setTimeout(() => {
                 showLoginPage();
@@ -68,20 +96,33 @@ async function handleRegister(e) {
             const errorMsg = response.errors
                 ? Object.values(response.errors).flat().join(', ')
                 : response.message;
-            showAlert('registerAlert', errorMsg, 'danger');
+            showAlert('registerAlert', '❌ ' + errorMsg, 'danger');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
         }
     } catch (error) {
-        showAlert('registerAlert', 'Terjadi kesalahan: ' + error.message, 'danger');
+        showAlert('registerAlert', '❌ Terjadi kesalahan: ' + error.message, 'danger');
+        console.error('Register error:', error);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
     }
 }
 
+// Quick Login (for demo)
 function quickLogin(email, password) {
     document.getElementById('email').value = email;
     document.getElementById('password').value = password;
-    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+
+    const form = document.getElementById('loginForm');
+    form.dispatchEvent(new Event('submit'));
 }
 
+// Logout
 async function logout() {
+    if (!confirm('Yakin ingin logout?')) return;
+
+    console.log('🔄 Logging out...');
+
     try {
         await API.logout();
     } catch (error) {
@@ -89,9 +130,13 @@ async function logout() {
     }
 
     removeToken();
+
+    console.log('✅ Logged out successfully');
+
     window.location.reload();
 }
 
+// Toggle NPM field based on role
 function toggleNPM() {
     const role = document.getElementById('regRole').value;
     const npmField = document.getElementById('npmField');
@@ -107,12 +152,16 @@ function toggleNPM() {
     }
 }
 
+// Show Login Page
 function showLoginPage() {
     document.getElementById('registerPage').style.display = 'none';
     document.getElementById('loginPage').style.display = 'block';
 }
 
+// Show Register Page
 function showRegisterPage() {
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('registerPage').style.display = 'block';
 }
+
+console.log('✅ Auth Module initialized');

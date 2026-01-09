@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Absensi Mahasiswa</title>
+    <title>Sistem Absensi Mahasiswa - Universitas Bumigora</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="navbar" style="display: none;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top" id="navbar" style="display: none;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-calendar-check"></i> Absensi Mahasiswa
+            <a class="navbar-brand" href="#" onclick="showDashboard()">
+                <i class="bi bi-calendar-check"></i> Sistem Absensi
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -25,7 +25,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showDashboard()">
+                        <a class="nav-link active" href="#" onclick="showDashboard()">
                             <i class="bi bi-house"></i> Dashboard
                         </a>
                     </li>
@@ -41,7 +41,7 @@
                     </li>
                     <li class="nav-item" id="nav-attendance" style="display: none;">
                         <a class="nav-link" href="#" onclick="showAttendance()">
-                            <i class="bi bi-clipboard-check"></i> Absensi
+                            <i class="bi bi-clipboard-check"></i> Riwayat Absensi
                         </a>
                     </li>
                 </ul>
@@ -69,14 +69,14 @@
     <!-- Main Content -->
     <div class="container-fluid mt-4" id="mainContent">
 
-        <!-- Login Page -->
+        <!-- ==================== LOGIN PAGE ==================== -->
         <div id="loginPage" class="row justify-content-center">
             <div class="col-md-5 col-lg-4">
-                <div class="card shadow">
+                <div class="card shadow-lg">
                     <div class="card-body p-5">
                         <div class="text-center mb-4">
                             <i class="bi bi-calendar-check text-primary" style="font-size: 4rem;"></i>
-                            <h3 class="mt-3">Sistem Absensi</h3>
+                            <h3 class="mt-3 fw-bold">Sistem Absensi</h3>
                             <p class="text-muted">Universitas Bumigora</p>
                         </div>
 
@@ -119,21 +119,21 @@
                 </div>
 
                 <!-- Quick Login (Development) -->
-                <div class="card mt-3 shadow-sm">
+                <div class="card mt-3 shadow">
                     <div class="card-body">
-                        <h6 class="card-title">Quick Login (Demo)</h6>
+                        <h6 class="card-title"><i class="bi bi-lightning-charge"></i> Quick Login (Demo)</h6>
                         <div class="d-grid gap-2">
                             <button class="btn btn-sm btn-outline-primary"
                                     onclick="quickLogin('admin@mail.com', 'secret123')">
-                                Login as Admin
+                                <i class="bi bi-shield-check"></i> Login as Admin
                             </button>
                             <button class="btn btn-sm btn-outline-success"
                                     onclick="quickLogin('budi@mail.com', 'secret123')">
-                                Login as Dosen
+                                <i class="bi bi-person-badge"></i> Login as Dosen
                             </button>
                             <button class="btn btn-sm btn-outline-info"
                                     onclick="quickLogin('andrian@mail.com', 'secret123')">
-                                Login as Mahasiswa
+                                <i class="bi bi-mortarboard"></i> Login as Mahasiswa
                             </button>
                         </div>
                     </div>
@@ -141,28 +141,32 @@
             </div>
         </div>
 
-        <!-- Register Page -->
+        <!-- ==================== REGISTER PAGE ==================== -->
         <div id="registerPage" class="row justify-content-center" style="display: none;">
             <div class="col-md-6 col-lg-5">
-                <div class="card shadow">
+                <div class="card shadow-lg">
                     <div class="card-body p-4">
-                        <h3 class="text-center mb-4">Registrasi</h3>
+                        <h3 class="text-center mb-4">
+                            <i class="bi bi-person-plus-fill text-primary"></i> Registrasi
+                        </h3>
 
                         <form id="registerForm">
                             <div class="mb-3">
                                 <label for="regName" class="form-label">Nama Lengkap</label>
-                                <input type="text" class="form-control" id="regName" required>
+                                <input type="text" class="form-control" id="regName"
+                                       placeholder="Nama lengkap" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="regEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="regEmail" required>
+                                <input type="email" class="form-control" id="regEmail"
+                                       placeholder="email@example.com" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="regPassword" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="regPassword"
-                                       minlength="6" required>
+                                       placeholder="Minimal 6 karakter" minlength="6" required>
                             </div>
 
                             <div class="mb-3">
@@ -176,7 +180,8 @@
 
                             <div class="mb-3" id="npmField" style="display: none;">
                                 <label for="regNPM" class="form-label">NPM</label>
-                                <input type="text" class="form-control" id="regNPM">
+                                <input type="text" class="form-control" id="regNPM"
+                                       placeholder="Nomor Pokok Mahasiswa">
                             </div>
 
                             <div class="d-grid gap-2">
@@ -198,13 +203,13 @@
             </div>
         </div>
 
-        <!-- Dashboard Page -->
+        <!-- ==================== DASHBOARD PAGE ==================== -->
         <div id="dashboardPage" style="display: none;">
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-12">
-                    <h2>Dashboard</h2>
-                    <p class="text-muted">Selamat datang, <span id="dashUserName"></span>
-                       (<span id="dashUserRole"></span>)</p>
+                    <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
+                    <p class="text-muted">Selamat datang, <strong><span id="dashUserName"></span></strong>
+                       (<span id="dashUserRole" class="badge bg-primary"></span>)</p>
                 </div>
             </div>
 
@@ -212,64 +217,88 @@
             <div id="mahasiswaDashboard" style="display: none;">
                 <div class="row g-3 mb-4">
                     <div class="col-md-3">
-                        <div class="card text-white bg-primary">
+                        <div class="card text-white bg-primary shadow-sm h-100">
                             <div class="card-body">
-                                <h5 class="card-title">Total Kehadiran</h5>
-                                <h2 id="totalAttendance">0</h2>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="card-title mb-0">Total Kehadiran</h6>
+                                        <h2 class="display-5 mt-2 mb-0" id="totalAttendance">0</h2>
+                                    </div>
+                                    <i class="bi bi-calendar-check" style="font-size: 3rem; opacity: 0.3;"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card text-white bg-success">
+                        <div class="card text-white bg-success shadow-sm h-100">
                             <div class="card-body">
-                                <h5 class="card-title">Hadir</h5>
-                                <h2 id="hadirCount">0</h2>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="card-title mb-0">Hadir</h6>
+                                        <h2 class="display-5 mt-2 mb-0" id="hadirCount">0</h2>
+                                    </div>
+                                    <i class="bi bi-check-circle" style="font-size: 3rem; opacity: 0.3;"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card text-white bg-warning">
+                        <div class="card text-white bg-warning shadow-sm h-100">
                             <div class="card-body">
-                                <h5 class="card-title">Izin/Sakit</h5>
-                                <h2 id="izinSakitCount">0</h2>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="card-title mb-0">Izin/Sakit</h6>
+                                        <h2 class="display-5 mt-2 mb-0" id="izinSakitCount">0</h2>
+                                    </div>
+                                    <i class="bi bi-exclamation-circle" style="font-size: 3rem; opacity: 0.3;"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card text-white bg-danger">
+                        <div class="card text-white bg-danger shadow-sm h-100">
                             <div class="card-body">
-                                <h5 class="card-title">Alpha</h5>
-                                <h2 id="alphaCount">0</h2>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="card-title mb-0">Alpha</h6>
+                                        <h2 class="display-5 mt-2 mb-0" id="alphaCount">0</h2>
+                                    </div>
+                                    <i class="bi bi-x-circle" style="font-size: 3rem; opacity: 0.3;"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm">
                             <div class="card-header bg-primary text-white">
-                                <h5><i class="bi bi-geo-alt"></i> Check-in Absensi</h5>
+                                <h5 class="mb-0"><i class="bi bi-geo-alt"></i> Check-in Absensi</h5>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label class="form-label">Pilih Kelas</label>
+                                    <label class="form-label fw-bold">Pilih Kelas</label>
                                     <select class="form-select" id="classSelect">
                                         <option value="">Loading...</option>
                                     </select>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Lokasi GPS</label>
+                                    <label class="form-label fw-bold">Lokasi GPS</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="gpsLocation"
                                                placeholder="Klik tombol untuk mendapatkan lokasi" readonly>
-                                        <button class="btn btn-outline-secondary" onclick="getGPSLocation()">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="getGPSLocation()">
                                             <i class="bi bi-crosshair"></i>
+                                        </button>
+                                        <button class="btn btn-outline-warning" type="button" onclick="useTestGPS()"
+                                                title="Gunakan GPS testing (Bumigora)">
+                                            <i class="bi bi-geo-alt"></i>
                                         </button>
                                     </div>
                                     <small class="text-muted">Koordinat:
-                                        <span id="coordinates">-</span>
+                                        <code id="coordinates">Belum didapatkan</code>
                                     </small>
                                 </div>
 
@@ -290,14 +319,19 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="card">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm">
                             <div class="card-header bg-info text-white">
-                                <h5><i class="bi bi-clock-history"></i> Riwayat Absensi Terakhir</h5>
+                                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Riwayat Absensi Terakhir</h5>
                             </div>
-                            <div class="card-body">
-                                <div id="recentAttendance" class="list-group">
-                                    <p class="text-muted">Loading...</p>
+                            <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                                <div id="recentAttendance">
+                                    <div class="text-center text-muted py-3">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p class="mt-2">Memuat data...</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -309,78 +343,99 @@
             <div id="dosenDashboard" style="display: none;">
                 <div class="row g-3 mb-4">
                     <div class="col-md-4">
-                        <div class="card text-white bg-info">
+                        <div class="card text-white bg-info shadow-sm h-100">
                             <div class="card-body">
-                                <h5 class="card-title">Total Mata Kuliah</h5>
-                                <h2 id="totalCourses">0</h2>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="card-title mb-0">Total Mata Kuliah</h6>
+                                        <h2 class="display-5 mt-2 mb-0" id="totalCourses">0</h2>
+                                    </div>
+                                    <i class="bi bi-book" style="font-size: 3rem; opacity: 0.3;"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card text-white bg-primary">
+                        <div class="card text-white bg-primary shadow-sm h-100">
                             <div class="card-body">
-                                <h5 class="card-title">Total Kelas</h5>
-                                <h2 id="totalClasses">0</h2>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="card-title mb-0">Total Kelas</h6>
+                                        <h2 class="display-5 mt-2 mb-0" id="totalClasses">0</h2>
+                                    </div>
+                                    <i class="bi bi-door-open" style="font-size: 3rem; opacity: 0.3;"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card text-white bg-success">
+                        <div class="card text-white bg-success shadow-sm h-100">
                             <div class="card-body">
-                                <h5 class="card-title">Mahasiswa Terdaftar</h5>
-                                <h2 id="totalStudents">0</h2>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="card-title mb-0">Total Mahasiswa</h6>
+                                        <h2 class="display-5 mt-2 mb-0" id="totalStudents">0</h2>
+                                    </div>
+                                    <i class="bi bi-people" style="font-size: 3rem; opacity: 0.3;"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5><i class="bi bi-calendar-event"></i> Absensi Hari Ini</h5>
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-calendar-event"></i> Absensi Hari Ini</h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
+                            <label class="form-label fw-bold">Pilih Kelas</label>
                             <select class="form-select" id="todayClassSelect" onchange="loadTodayAttendance()">
                                 <option value="">Pilih Kelas</option>
                             </select>
                         </div>
                         <div id="todayAttendanceList">
-                            <p class="text-muted">Pilih kelas untuk melihat absensi</p>
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> Pilih kelas untuk melihat absensi hari ini
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Courses Page -->
+        <!-- ==================== COURSES PAGE ==================== -->
         <div id="coursesPage" style="display: none;">
             <div class="row mb-3">
-                <div class="col">
-                    <h2>Manajemen Mata Kuliah</h2>
+                <div class="col-md-6">
+                    <h2><i class="bi bi-book"></i> Mata Kuliah</h2>
                 </div>
-                <div class="col-auto">
-                    <button class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#courseModal" onclick="resetCourseForm()">
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-primary" onclick="showAddCourseModal()">
                         <i class="bi bi-plus-circle"></i> Tambah Mata Kuliah
                     </button>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card shadow-sm">
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
-                            <thead>
+                            <thead class="table-light">
                                 <tr>
                                     <th>Kode MK</th>
                                     <th>Nama Mata Kuliah</th>
                                     <th>SKS</th>
-                                    <th>Aksi</th>
+                                    <th width="150">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="coursesTableBody">
                                 <tr>
-                                    <td colspan="4" class="text-center">Loading...</td>
+                                    <td colspan="4" class="text-center">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -389,36 +444,39 @@
             </div>
         </div>
 
-        <!-- Classes Page -->
+        <!-- ==================== CLASSES PAGE ==================== -->
         <div id="classesPage" style="display: none;">
             <div class="row mb-3">
-                <div class="col">
-                    <h2>Manajemen Kelas</h2>
+                <div class="col-md-6">
+                    <h2><i class="bi bi-door-open"></i> Kelas</h2>
                 </div>
-                <div class="col-auto">
-                    <button class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#classModal" onclick="resetClassForm()">
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-primary" onclick="showAddClassModal()">
                         <i class="bi bi-plus-circle"></i> Tambah Kelas
                     </button>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card shadow-sm">
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
-                            <thead>
+                            <thead class="table-light">
                                 <tr>
                                     <th>Mata Kuliah</th>
                                     <th>Dosen</th>
                                     <th>Jadwal</th>
                                     <th>Lokasi</th>
-                                    <th>Aksi</th>
+                                    <th width="200">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="classesTableBody">
                                 <tr>
-                                    <td colspan="5" class="text-center">Loading...</td>
+                                    <td colspan="5" class="text-center">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -427,15 +485,19 @@
             </div>
         </div>
 
-        <!-- Attendance Page (Mahasiswa) -->
+        <!-- ==================== ATTENDANCE HISTORY PAGE ==================== -->
         <div id="attendancePage" style="display: none;">
-            <h2>Riwayat Absensi</h2>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h2><i class="bi bi-clipboard-check"></i> Riwayat Absensi</h2>
+                </div>
+            </div>
 
-            <div class="card">
+            <div class="card shadow-sm">
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
-                            <thead>
+                            <thead class="table-light">
                                 <tr>
                                     <th>Tanggal</th>
                                     <th>Mata Kuliah</th>
@@ -446,7 +508,11 @@
                             </thead>
                             <tbody id="attendanceTableBody">
                                 <tr>
-                                    <td colspan="5" class="text-center">Loading...</td>
+                                    <td colspan="5" class="text-center">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -455,34 +521,34 @@
             </div>
         </div>
 
-        <!-- Profile Page -->
+        <!-- ==================== PROFILE PAGE ==================== -->
         <div id="profilePage" style="display: none;">
-            <h2>Profile</h2>
-
-            <div class="row">
+            <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <div class="card">
+                    <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="text-center mb-4">
-                                <i class="bi bi-person-circle text-primary" style="font-size: 5rem;"></i>
+                                <i class="bi bi-person-circle text-primary" style="font-size: 6rem;"></i>
+                                <h3 class="mt-3" id="profileName"></h3>
+                                <span class="badge bg-primary" id="profileRoleBadge"></span>
                             </div>
 
                             <table class="table">
                                 <tr>
-                                    <th>Nama</th>
-                                    <td id="profileName">-</td>
+                                    <th width="150"><i class="bi bi-envelope"></i> Email</th>
+                                    <td id="profileEmail"></td>
                                 </tr>
                                 <tr>
-                                    <th>Email</th>
-                                    <td id="profileEmail">-</td>
-                                </tr>
-                                <tr>
-                                    <th>Role</th>
-                                    <td id="profileRole">-</td>
+                                    <th><i class="bi bi-shield-check"></i> Role</th>
+                                    <td id="profileRole"></td>
                                 </tr>
                                 <tr id="profileNPMRow" style="display: none;">
-                                    <th>NPM</th>
-                                    <td id="profileNPM">-</td>
+                                    <th><i class="bi bi-card-text"></i> NPM</th>
+                                    <td id="profileNPM"></td>
+                                </tr>
+                                <tr>
+                                    <th><i class="bi bi-calendar"></i> Terdaftar</th>
+                                    <td id="profileCreated"></td>
                                 </tr>
                             </table>
                         </div>
@@ -492,7 +558,9 @@
         </div>
     </div>
 
-    <!-- Modal: Course Form -->
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Modal Course -->
     <div class="modal fade" id="courseModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -505,7 +573,7 @@
                         <input type="hidden" id="courseId">
 
                         <div class="mb-3">
-                            <label for="courseCode" class="form-label">Kode MK</label>
+                            <label for="courseCode" class="form-label">Kode Mata Kuliah</label>
                             <input type="text" class="form-control" id="courseCode" required>
                         </div>
 
@@ -529,7 +597,7 @@
         </div>
     </div>
 
-    <!-- Modal: Class Form -->
+    <!-- Modal Class -->
     <div class="modal fade" id="classModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -539,18 +607,20 @@
                 </div>
                 <form id="classForm">
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="classCourse" class="form-label">Mata Kuliah</label>
-                            <select class="form-select" id="classCourse" required>
-                                <option value="">Pilih Mata Kuliah</option>
-                            </select>
-                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="classCourse" class="form-label">Mata Kuliah</label>
+                                <select class="form-select" id="classCourse" required>
+                                    <option value="">Loading...</option>
+                                </select>
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="classLecturer" class="form-label">Dosen</label>
-                            <select class="form-select" id="classLecturer" required>
-                                <option value="">Pilih Dosen</option>
-                            </select>
+                            <div class="col-md-6 mb-3">
+                                <label for="classLecturer" class="form-label">Dosen</label>
+                                <select class="form-select" id="classLecturer" required>
+                                    <option value="">Loading...</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -566,21 +636,22 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-3">
                                 <label for="classLatitude" class="form-label">Latitude</label>
-                                <input type="number" class="form-control" id="classLatitude"
-                                       step="0.0000001" required>
+                                <input type="number" step="any" class="form-control" id="classLatitude"
+                                       placeholder="-8.583069" required>
                             </div>
-                            <div class="col-md-6">
+
+                            <div class="col-md-6 mb-3">
                                 <label for="classLongitude" class="form-label">Longitude</label>
-                                <input type="number" class="form-control" id="classLongitude"
-                                       step="0.0000001" required>
+                                <input type="number" step="any" class="form-control" id="classLongitude"
+                                       placeholder="116.116600" required>
                             </div>
                         </div>
 
-                        <div class="mt-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary"
-                                    onclick="getCurrentLocation()">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Gunakan koordinat GPS lokasi kelas yang sebenarnya.
+                            <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="getCurrentLocationForClass()">
                                 <i class="bi bi-crosshair"></i> Gunakan Lokasi Saat Ini
                             </button>
                         </div>
@@ -594,13 +665,66 @@
         </div>
     </div>
 
+    <!-- Modal Class Students -->
+    <div class="modal fade" id="studentsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Daftar Mahasiswa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="studentsModalContent">
+                        <div class="text-center py-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Enroll Student -->
+    <div class="modal fade" id="enrollModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Daftarkan Mahasiswa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="enrollForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="enrollClassId">
+
+                        <div class="mb-3">
+                            <label for="enrollStudentId" class="form-label">Student ID</label>
+                            <input type="number" class="form-control" id="enrollStudentId"
+                                   placeholder="Masukkan ID mahasiswa" required>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <small>Masukkan ID mahasiswa (bukan NPM). Lihat di database atau dashboard admin.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Daftarkan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Custom JS -->
-    <script src="assets/js/api.js"></script>
-    <script src="assets/js/gps.js"></script>
-    <script src="assets/js/auth.js"></script>
-    <script src="assets/js/app.js"></script>
+    <!-- Custom JS (URUTAN PENTING!) -->
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/gps.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/app.js"></script>
 </body>
 </html>

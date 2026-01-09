@@ -1,18 +1,23 @@
 // Main Application Functions
 
+console.log('⚙️ App Module loading...');
+
 let currentUser = null;
 let allCourses = [];
 let allClasses = [];
-let enrolledClasses = [];
 
 // Initialize App
 async function initApp() {
+    console.log('🚀 Initializing app...');
+
     try {
         const response = await API.getProfile();
 
         if (response.status === 'success') {
             currentUser = response.data;
             setUser(currentUser);
+
+            console.log('👤 Current user:', currentUser.name, '(' + currentUser.role + ')');
 
             // Hide login, show main app
             document.getElementById('loginPage').style.display = 'none';
@@ -27,8 +32,10 @@ async function initApp() {
 
             // Show dashboard
             showDashboard();
+
+            console.log('✅ App initialized successfully');
         } else {
-            // Token invalid, logout
+            console.log('❌ Invalid token, logging out...');
             removeToken();
             window.location.reload();
         }
@@ -39,8 +46,11 @@ async function initApp() {
     }
 }
 
+// Setup Navigation based on role
 function setupNavigation() {
     const role = currentUser.role;
+
+    console.log('🔧 Setting up navigation for role:', role);
 
     // Hide all nav items first
     document.getElementById('nav-courses').style.display = 'none';
@@ -66,14 +76,16 @@ function hideAllPages() {
     document.getElementById('profilePage').style.display = 'none';
 }
 
+// Show Dashboard
 async function showDashboard() {
+    console.log('📊 Loading dashboard...');
+
     hideAllPages();
     document.getElementById('dashboardPage').style.display = 'block';
 
     // Update user info
     document.getElementById('dashUserName').textContent = currentUser.name;
-    document.getElementById('dashUserRole').textContent =
-        currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+    document.getElementById('dashUserRole').textContent = currentUser.role.toUpperCase();
 
     if (currentUser.role === 'mahasiswa') {
         document.getElementById('mahasiswaDashboard').style.display = 'block';
@@ -86,16 +98,20 @@ async function showDashboard() {
     }
 }
 
+// Load Mahasiswa Dashboard
 async function loadMahasiswaDashboard() {
+    console.log('📚 Loading mahasiswa dashboard...');
+
     // Load statistics
     try {
         const stats = await API.getStats();
         if (stats.status === 'success') {
             document.getElementById('totalAttendance').textContent = stats.data.total;
             document.getElementById('hadirCount').textContent = stats.data.hadir;
-            document.getElementById('izinSakitCount').textContent =
-                stats.data.izin + stats.data.sakit;
+            document.getElementById('izinSakitCount').textContent = stats.data.izin + stats.data.sakit;
             document.getElementById('alphaCount').textContent = stats.data.alpha;
+
+            console.log('✅ Stats loaded:', stats.data);
         }
     } catch (error) {
         console.error('Load stats error:', error);
@@ -105,19 +121,21 @@ async function loadMahasiswaDashboard() {
     try {
         const classes = await API.getClasses();
         if (classes.status === 'success') {
-            enrolledClasses = classes.data;
-
             const select = document.getElementById('classSelect');
             select.innerHTML = '<option value="">Pilih Kelas</option>';
 
-            enrolledClasses.forEach(cls => {
-                const option = document.createElement('option');
-                option.value = cls.id;
-                option.textContent = `${cls.course.course_name} - ${cls.schedule}`;
-                option.dataset.lat = cls.latitude;
-                option.dataset.lng = cls.longitude;
-                select.appendChild(option);
-            });
+            if (classes.data.length === 0) {
+                select.innerHTML = '<option value="">Belum ada kelas terdaftar</option>';
+            } else {
+                classes.data.forEach(cls => {
+                    const option = document.createElement('option');
+                    option.value = cls.id;
+                    option.textContent = `${cls.course.course_name} - ${cls.schedule}`;
+                    select.appendChild(option);
+                });
+            }
+
+            console.log('✅ Classes loaded:', classes.data.length);
         }
     } catch (error) {
         console.error('Load classes error:', error);
@@ -133,13 +151,16 @@ async function loadMahasiswaDashboard() {
             const recent = history.data.slice(0, 5);
 
             if (recent.length === 0) {
-                recentDiv.innerHTML = '<p class="text-muted">Belum ada riwayat absensi</p>';
+                recentDiv.innerHTML = '<p class="text-muted text-center">Belum ada riwayat absensi</p>';
             } else {
                 recent.forEach(att => {
                     const item = document.createElement('div');
                     item.className = 'list-group-item';
 
-                    const statusBadge = getStatusBadge(att.status);
+                    const statusClass = att.status === 'hadir' ? 'success' :
+                                       att.status === 'izin' ? 'warning' :
+                                       att.status === 'sakit' ? 'info' : 'danger';
+
                     const courseName = att.class?.course?.course_name || 'N/A';
                     const date = new Date(att.date).toLocaleDateString('id-ID');
                     const checkIn = att.check_in_time
@@ -151,14 +172,19 @@ async function loadMahasiswaDashboard() {
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="mb-1">${courseName}</h6>
-                                <small class="text-muted">${date} - ${checkIn}</small>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar"></i> ${date} &nbsp;
+                                    <i class="bi bi-clock"></i> ${checkIn}
+                                </small>
                             </div>
-                            <span class="badge ${statusBadge.class}">${statusBadge.text}</span>
+                            <span class="badge bg-${statusClass}">${att.status.toUpperCase()}</span>
                         </div>
                     `;
                     recentDiv.appendChild(item);
                 });
             }
+
+            console.log('✅ Recent attendance loaded:', recent.length);
         }
     } catch (error) {
         console.error('Load history error:', error);
@@ -168,8 +194,10 @@ async function loadMahasiswaDashboard() {
     autoGetGPS();
 }
 
+// Load Dosen Dashboard
 async function loadDosenDashboard() {
-    // Load statistics
+    console.log('👨‍🏫 Loading dosen dashboard...');
+
     try {
         const [coursesRes, classesRes] = await Promise.all([
             API.getCourses(),
@@ -178,13 +206,25 @@ async function loadDosenDashboard() {
 
         if (coursesRes.status === 'success') {
             document.getElementById('totalCourses').textContent = coursesRes.data.length;
+            console.log('✅ Total courses:', coursesRes.data.length);
         }
 
         if (classesRes.status === 'success') {
             allClasses = classesRes.data;
             document.getElementById('totalClasses').textContent = allClasses.length;
 
-            // Count total students enrolled
+            // Populate today class select
+            const select = document.getElementById('todayClassSelect');
+            select.innerHTML = '<option value="">Pilih Kelas</option>';
+
+            allClasses.forEach(cls => {
+                const option = document.createElement('option');
+                option.value = cls.id;
+                option.textContent = `${cls.course.course_name} - ${cls.schedule}`;
+                select.appendChild(option);
+            });
+
+            // Count total students
             let totalStudents = 0;
             for (const cls of allClasses) {
                 try {
@@ -198,32 +238,24 @@ async function loadDosenDashboard() {
             }
             document.getElementById('totalStudents').textContent = totalStudents;
 
-            // Populate today class select
-            const select = document.getElementById('todayClassSelect');
-            select.innerHTML = '<option value="">Pilih Kelas</option>';
-
-            allClasses.forEach(cls => {
-                const option = document.createElement('option');
-                option.value = cls.id;
-                option.textContent = `${cls.course.course_name} - ${cls.schedule}`;
-                select.appendChild(option);
-            });
+            console.log('✅ Total students:', totalStudents);
         }
     } catch (error) {
         console.error('Load dosen dashboard error:', error);
     }
 }
 
+// Load Today Attendance
 async function loadTodayAttendance() {
     const classId = document.getElementById('todayClassSelect').value;
     const listDiv = document.getElementById('todayAttendanceList');
 
     if (!classId) {
-        listDiv.innerHTML = '<p class="text-muted">Pilih kelas untuk melihat absensi</p>';
+        listDiv.innerHTML = '<p class="text-muted text-center">Pilih kelas untuk melihat absensi</p>';
         return;
     }
 
-    listDiv.innerHTML = '<p class="text-muted">Loading...</p>';
+    listDiv.innerHTML = '<p class="text-muted text-center"><span class="spinner-border spinner-border-sm"></span> Loading...</p>';
 
     try {
         const response = await API.getTodayAttendance(classId);
@@ -232,16 +264,17 @@ async function loadTodayAttendance() {
             const students = response.data;
 
             if (students.length === 0) {
-                listDiv.innerHTML = '<p class="text-muted">Tidak ada mahasiswa terdaftar</p>';
+                listDiv.innerHTML = '<p class="text-muted text-center">Tidak ada mahasiswa terdaftar</p>';
                 return;
             }
 
-            let html = '<div class="table-responsive"><table class="table table-hover">';
-            html += '<thead><tr><th>NPM</th><th>Nama</th><th>Status</th><th>Check-in</th></tr></thead><tbody>';
+            let html = '<div class="table-responsive"><table class="table table-hover table-sm">';
+            html += '<thead class="table-light"><tr><th>NPM</th><th>Nama</th><th>Status</th><th>Check-in</th></tr></thead><tbody>';
 
             students.forEach(student => {
                 const status = student.status || 'Belum Absen';
-                const statusBadge = getStatusBadge(status);
+                const statusClass = status === 'hadir' ? 'success' :
+                                   status === 'Belum Absen' ? 'secondary' : 'warning';
                 const checkIn = student.check_in_time
                     ? new Date(student.check_in_time).toLocaleTimeString('id-ID',
                         {hour: '2-digit', minute: '2-digit'})
@@ -251,7 +284,7 @@ async function loadTodayAttendance() {
                     <tr>
                         <td>${student.npm || '-'}</td>
                         <td>${student.name}</td>
-                        <td><span class="badge ${statusBadge.class}">${statusBadge.text}</span></td>
+                        <td><span class="badge bg-${statusClass}">${status}</span></td>
                         <td>${checkIn}</td>
                     </tr>
                 `;
@@ -259,99 +292,132 @@ async function loadTodayAttendance() {
 
             html += '</tbody></table></div>';
             listDiv.innerHTML = html;
+
+            console.log('✅ Today attendance loaded:', students.length);
         }
     } catch (error) {
-        listDiv.innerHTML = '<p class="text-danger">Error loading data</p>';
+        listDiv.innerHTML = '<p class="text-danger text-center">Error loading data</p>';
         console.error('Load today attendance error:', error);
     }
 }
 
-// Check-in/Check-out Functions
+// Check-in Function
 async function checkIn() {
     const classId = document.getElementById('classSelect').value;
 
     if (!classId) {
-        showAlert('attendanceAlert', 'Pilih kelas terlebih dahulu', 'warning');
+        showAlert('attendanceAlert', '⚠️ Pilih kelas terlebih dahulu', 'warning');
         return;
     }
 
     if (!currentLatitude || !currentLongitude) {
-        showAlert('attendanceAlert', 'Dapatkan lokasi GPS terlebih dahulu', 'warning');
+        showAlert('attendanceAlert', '⚠️ Dapatkan lokasi GPS terlebih dahulu (klik tombol GPS atau Test)', 'warning');
         return;
     }
 
     const btn = document.getElementById('checkInBtn');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Loading...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+
+    console.log('🔄 Check-in...', { classId, latitude: currentLatitude, longitude: currentLongitude });
 
     try {
         const response = await API.checkIn(classId, currentLatitude, currentLongitude);
 
         if (response.status === 'success') {
-            showAlert('attendanceAlert', response.message, 'success');
-
-            // Enable check-out button
+            showAlert('attendanceAlert', '✅ ' + response.message, 'success');
             document.getElementById('checkOutBtn').disabled = false;
 
-            // Reload dashboard data
+            console.log('✅ Check-in successful');
+
             setTimeout(() => {
                 loadMahasiswaDashboard();
             }, 2000);
         } else {
-            showAlert('attendanceAlert', response.message, 'danger');
+            showAlert('attendanceAlert', '❌ ' + response.message, 'danger');
             btn.disabled = false;
+            console.log('❌ Check-in failed:', response.message);
         }
     } catch (error) {
-        showAlert('attendanceAlert', 'Terjadi kesalahan: ' + error.message, 'danger');
+        showAlert('attendanceAlert', '❌ Terjadi kesalahan: ' + error.message, 'danger');
         btn.disabled = false;
+        console.error('Check-in error:', error);
     } finally {
         btn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Check-in';
     }
 }
 
+// Check-out Function
 async function checkOut() {
     const classId = document.getElementById('classSelect').value;
 
     if (!classId) {
-        showAlert('attendanceAlert', 'Pilih kelas terlebih dahulu', 'warning');
+        showAlert('attendanceAlert', '⚠️ Pilih kelas terlebih dahulu', 'warning');
         return;
     }
 
     if (!currentLatitude || !currentLongitude) {
-        showAlert('attendanceAlert', 'Dapatkan lokasi GPS terlebih dahulu', 'warning');
+        showAlert('attendanceAlert', '⚠️ Dapatkan lokasi GPS terlebih dahulu', 'warning');
         return;
     }
 
     const btn = document.getElementById('checkOutBtn');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Loading...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+
+    console.log('🔄 Check-out...', { classId, latitude: currentLatitude, longitude: currentLongitude });
 
     try {
         const response = await API.checkOut(classId, currentLatitude, currentLongitude);
 
         if (response.status === 'success') {
-            showAlert('attendanceAlert', response.message, 'success');
+            showAlert('attendanceAlert', '✅ ' + response.message, 'success');
 
-            // Reload dashboard data
+            console.log('✅ Check-out successful');
+
             setTimeout(() => {
                 loadMahasiswaDashboard();
                 document.getElementById('checkInBtn').disabled = false;
                 document.getElementById('checkOutBtn').disabled = true;
             }, 2000);
         } else {
-            showAlert('attendanceAlert', response.message, 'danger');
+            showAlert('attendanceAlert', '❌ ' + response.message, 'danger');
             btn.disabled = false;
+            console.log('❌ Check-out failed:', response.message);
         }
     } catch (error) {
-        showAlert('attendanceAlert', 'Terjadi kesalahan: ' + error.message, 'danger');
+        showAlert('attendanceAlert', '❌ Terjadi kesalahan: ' + error.message, 'danger');
         btn.disabled = false;
+        console.error('Check-out error:', error);
     } finally {
         btn.innerHTML = '<i class="bi bi-box-arrow-right"></i> Check-out';
     }
 }
 
-// Courses Page
+// Helper: Show Alert
+function showAlert(elementId, message, type) {
+    const alert = document.getElementById(elementId);
+    if (!alert) return;
+
+    alert.className = `alert alert-${type} alert-dismissible fade show`;
+    alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    alert.style.display = 'block';
+
+    setTimeout(() => {
+        alert.style.display = 'none';
+    }, 5000);
+}
+
+console.log('✅ App Module loaded (Part 1)');
+
+// ==================== COURSES PAGE ====================
+
 async function showCourses() {
+    console.log('📚 Loading courses page...');
+
     hideAllPages();
     document.getElementById('coursesPage').style.display = 'block';
     await loadCourses();
@@ -359,7 +425,7 @@ async function showCourses() {
 
 async function loadCourses() {
     const tbody = document.getElementById('coursesTableBody');
-    tbody.innerHTML = '<tr><td colspan="4" class="text-center">Loading...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center"><span class="spinner-border spinner-border-sm"></span> Loading...</td></tr>';
 
     try {
         const response = await API.getCourses();
@@ -368,7 +434,7 @@ async function loadCourses() {
             allCourses = response.data;
 
             if (allCourses.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Belum ada data</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Belum ada data mata kuliah</td></tr>';
                 return;
             }
 
@@ -376,15 +442,15 @@ async function loadCourses() {
             allCourses.forEach(course => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${course.course_code}</td>
+                    <td><strong>${course.course_code}</strong></td>
                     <td>${course.course_name}</td>
-                    <td>${course.credits} SKS</td>
+                    <td><span class="badge bg-primary">${course.credits} SKS</span></td>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <button class="btn btn-warning" onclick="editCourse(${course.id})">
+                            <button class="btn btn-warning" onclick="editCourse(${course.id})" title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <button class="btn btn-danger" onclick="deleteCourse(${course.id})">
+                            <button class="btn btn-danger" onclick="deleteCourse(${course.id})" title="Hapus">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
@@ -392,11 +458,19 @@ async function loadCourses() {
                 `;
                 tbody.appendChild(row);
             });
+
+            console.log('✅ Courses loaded:', allCourses.length);
         }
     } catch (error) {
         tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Error loading data</td></tr>';
         console.error('Load courses error:', error);
     }
+}
+
+function showAddCourseModal() {
+    resetCourseForm();
+    const modal = new bootstrap.Modal(document.getElementById('courseModal'));
+    modal.show();
 }
 
 function resetCourseForm() {
@@ -424,21 +498,25 @@ function editCourse(id) {
 async function deleteCourse(id) {
     if (!confirm('Yakin ingin menghapus mata kuliah ini?')) return;
 
+    console.log('🗑️ Deleting course:', id);
+
     try {
         const response = await API.deleteCourse(id);
 
         if (response.status === 'success') {
-            alert('Mata kuliah berhasil dihapus');
+            alert('✅ Mata kuliah berhasil dihapus');
             loadCourses();
+            console.log('✅ Course deleted');
         } else {
-            alert(response.message || 'Gagal menghapus mata kuliah');
+            alert('❌ ' + (response.message || 'Gagal menghapus mata kuliah'));
         }
     } catch (error) {
-        alert('Terjadi kesalahan: ' + error.message);
+        alert('❌ Terjadi kesalahan: ' + error.message);
+        console.error('Delete course error:', error);
     }
 }
 
-// Course Form Submit
+// Course Form Submit Handler
 document.addEventListener('DOMContentLoaded', function() {
     const courseForm = document.getElementById('courseForm');
     if (courseForm) {
@@ -452,6 +530,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 credits: parseInt(document.getElementById('courseCredits').value)
             };
 
+            console.log('💾 Saving course:', data);
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving...';
+
             try {
                 let response;
                 if (id) {
@@ -461,24 +545,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 if (response.status === 'success') {
-                    alert(response.message || 'Berhasil menyimpan mata kuliah');
+                    alert('✅ ' + (response.message || 'Berhasil menyimpan mata kuliah'));
                     bootstrap.Modal.getInstance(document.getElementById('courseModal')).hide();
                     loadCourses();
+                    console.log('✅ Course saved');
                 } else {
                     const errorMsg = response.errors
                         ? Object.values(response.errors).flat().join(', ')
                         : response.message;
-                    alert(errorMsg);
+                    alert('❌ ' + errorMsg);
                 }
             } catch (error) {
-                alert('Terjadi kesalahan: ' + error.message);
+                alert('❌ Terjadi kesalahan: ' + error.message);
+                console.error('Save course error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Simpan';
             }
         });
     }
 });
 
-// Classes Page
+// ==================== CLASSES PAGE ====================
+
 async function showClasses() {
+    console.log('🚪 Loading classes page...');
+
     hideAllPages();
     document.getElementById('classesPage').style.display = 'block';
     await loadClasses();
@@ -486,7 +578,7 @@ async function showClasses() {
 
 async function loadClasses() {
     const tbody = document.getElementById('classesTableBody');
-    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Loading...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center"><span class="spinner-border spinner-border-sm"></span> Loading...</td></tr>';
 
     try {
         const response = await API.getClasses();
@@ -495,7 +587,7 @@ async function loadClasses() {
             allClasses = response.data;
 
             if (allClasses.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Belum ada data</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Belum ada data kelas</td></tr>';
                 return;
             }
 
@@ -503,19 +595,19 @@ async function loadClasses() {
             allClasses.forEach(cls => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${cls.course?.course_name || 'N/A'}</td>
+                    <td><strong>${cls.course?.course_name || 'N/A'}</strong></td>
                     <td>${cls.lecturer?.name || 'N/A'}</td>
-                    <td>${cls.schedule}</td>
-                    <td>${cls.location}</td>
+                    <td><small>${cls.schedule}</small></td>
+                    <td><small>${cls.location}</small></td>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <button class="btn btn-info" onclick="viewClassStudents(${cls.id})">
+                            <button class="btn btn-info" onclick="viewClassStudents(${cls.id})" title="Lihat Mahasiswa">
                                 <i class="bi bi-people"></i>
                             </button>
-                            <button class="btn btn-success" onclick="showEnrollModal(${cls.id})">
+                            <button class="btn btn-success" onclick="showEnrollModal(${cls.id})" title="Daftarkan Mahasiswa">
                                 <i class="bi bi-person-plus"></i>
                             </button>
-                            <button class="btn btn-primary" onclick="viewClassAttendance(${cls.id})">
+                            <button class="btn btn-primary" onclick="viewClassAttendance(${cls.id})" title="Lihat Absensi">
                                 <i class="bi bi-clipboard-check"></i>
                             </button>
                         </div>
@@ -523,6 +615,8 @@ async function loadClasses() {
                 `;
                 tbody.appendChild(row);
             });
+
+            console.log('✅ Classes loaded:', allClasses.length);
         }
     } catch (error) {
         tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error loading data</td></tr>';
@@ -530,35 +624,31 @@ async function loadClasses() {
     }
 }
 
-function resetClassForm() {
-    document.getElementById('classCourse').innerHTML = '<option value="">Loading...</option>';
-    document.getElementById('classLecturer').innerHTML = '<option value="">Loading...</option>';
-    document.getElementById('classSchedule').value = '';
-    document.getElementById('classLocation').value = '';
-    document.getElementById('classLatitude').value = '';
-    document.getElementById('classLongitude').value = '';
+async function showAddClassModal() {
+    console.log('🔧 Preparing class form...');
 
-    // Load courses and lecturers
-    API.getCourses().then(res => {
-        if (res.status === 'success') {
-            const select = document.getElementById('classCourse');
-            select.innerHTML = '<option value="">Pilih Mata Kuliah</option>';
-            res.data.forEach(course => {
+    // Load courses for dropdown
+    try {
+        const coursesRes = await API.getCourses();
+        const select = document.getElementById('classCourse');
+        select.innerHTML = '<option value="">Pilih Mata Kuliah</option>';
+
+        if (coursesRes.status === 'success') {
+            coursesRes.data.forEach(course => {
                 const option = document.createElement('option');
                 option.value = course.id;
                 option.textContent = `${course.course_code} - ${course.course_name}`;
                 select.appendChild(option);
             });
         }
-    });
+    } catch (error) {
+        console.error('Load courses for dropdown error:', error);
+    }
 
-    // For simplicity, you need to create an endpoint to get lecturers
-    // Or filter from users with role 'dosen'
-    // Here we just put placeholder
+    // Set lecturer (current user if dosen)
     const lecturerSelect = document.getElementById('classLecturer');
     lecturerSelect.innerHTML = '<option value="">Pilih Dosen</option>';
-    // You should load actual lecturers from API
-    // For demo, use current user if dosen
+
     if (currentUser.role === 'dosen' || currentUser.role === 'admin') {
         const option = document.createElement('option');
         option.value = currentUser.id;
@@ -566,9 +656,18 @@ function resetClassForm() {
         option.selected = true;
         lecturerSelect.appendChild(option);
     }
+
+    // Reset form
+    document.getElementById('classSchedule').value = '';
+    document.getElementById('classLocation').value = '';
+    document.getElementById('classLatitude').value = '';
+    document.getElementById('classLongitude').value = '';
+
+    const modal = new bootstrap.Modal(document.getElementById('classModal'));
+    modal.show();
 }
 
-// Class Form Submit
+// Class Form Submit Handler
 document.addEventListener('DOMContentLoaded', function() {
     const classForm = document.getElementById('classForm');
     if (classForm) {
@@ -584,27 +683,46 @@ document.addEventListener('DOMContentLoaded', function() {
                 longitude: parseFloat(document.getElementById('classLongitude').value)
             };
 
+            console.log('💾 Saving class:', data);
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Saving...';
+
             try {
                 const response = await API.createClass(data);
 
                 if (response.status === 'success') {
-                    alert(response.message || 'Berhasil membuat kelas');
+                    alert('✅ ' + (response.message || 'Berhasil membuat kelas'));
                     bootstrap.Modal.getInstance(document.getElementById('classModal')).hide();
                     loadClasses();
+                    console.log('✅ Class saved');
                 } else {
                     const errorMsg = response.errors
                         ? Object.values(response.errors).flat().join(', ')
                         : response.message;
-                    alert(errorMsg);
+                    alert('❌ ' + errorMsg);
                 }
             } catch (error) {
-                alert('Terjadi kesalahan: ' + error.message);
+                alert('❌ Terjadi kesalahan: ' + error.message);
+                console.error('Save class error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Simpan';
             }
         });
     }
 });
 
 async function viewClassStudents(classId) {
+    console.log('👥 Loading students for class:', classId);
+
+    const modal = new bootstrap.Modal(document.getElementById('studentsModal'));
+    const content = document.getElementById('studentsModalContent');
+
+    content.innerHTML = '<div class="text-center py-3"><span class="spinner-border"></span></div>';
+    modal.show();
+
     try {
         const response = await API.getClassStudents(classId);
 
@@ -612,60 +730,92 @@ async function viewClassStudents(classId) {
             const students = response.data;
             const classInfo = response.class;
 
-            let html = `<h5>${classInfo.course.course_name}</h5>`;
-            html += `<p class="text-muted">${classInfo.schedule} - ${classInfo.location}</p>`;
-            html += '<hr><h6>Daftar Mahasiswa:</h6>';
+            let html = `
+                <h5>${classInfo.course.course_name}</h5>
+                <p class="text-muted">${classInfo.schedule} - ${classInfo.location}</p>
+                <hr>
+                <h6>Daftar Mahasiswa (${students.length}):</h6>
+            `;
 
             if (students.length === 0) {
-                html += '<p class="text-muted">Belum ada mahasiswa terdaftar</p>';
+                html += '<p class="text-muted text-center">Belum ada mahasiswa terdaftar</p>';
             } else {
-                html += '<ul class="list-group">';
+                html += '<div class="list-group">';
                 students.forEach(student => {
                     html += `
-                        <li class="list-group-item">
-                            <strong>${student.name}</strong> (${student.npm})
-                            <br><small class="text-muted">${student.email}</small>
-                        </li>
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">${student.name}</h6>
+                                    <small class="text-muted">
+                                        <i class="bi bi-card-text"></i> ${student.npm || '-'} &nbsp;
+                                        <i class="bi bi-envelope"></i> ${student.email}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     `;
                 });
-                html += '</ul>';
+                html += '</div>';
             }
 
-            // Show in modal or alert
-            alert(html.replace(/<[^>]*>/g, '\n'));
+            content.innerHTML = html;
+            console.log('✅ Students loaded:', students.length);
         }
     } catch (error) {
-        alert('Error: ' + error.message);
+        content.innerHTML = '<p class="text-danger text-center">Error loading data</p>';
+        console.error('Load students error:', error);
     }
 }
 
 function showEnrollModal(classId) {
-    const npm = prompt('Masukkan NPM Mahasiswa untuk didaftarkan:');
-    if (!npm) return;
+    document.getElementById('enrollClassId').value = classId;
+    document.getElementById('enrollStudentId').value = '';
 
-    // Note: You need to create endpoint to search student by NPM
-    // For now, prompt for student ID
-    const studentId = prompt('Masukkan Student ID:');
-    if (!studentId) return;
-
-    enrollStudentToClass(classId, parseInt(studentId));
+    const modal = new bootstrap.Modal(document.getElementById('enrollModal'));
+    modal.show();
 }
 
-async function enrollStudentToClass(classId, studentId) {
-    try {
-        const response = await API.enrollStudent(classId, studentId);
+// Enroll Form Submit Handler
+document.addEventListener('DOMContentLoaded', function() {
+    const enrollForm = document.getElementById('enrollForm');
+    if (enrollForm) {
+        enrollForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-        if (response.status === 'success') {
-            alert(response.message || 'Mahasiswa berhasil didaftarkan');
-        } else {
-            alert(response.message || 'Gagal mendaftarkan mahasiswa');
-        }
-    } catch (error) {
-        alert('Error: ' + error.message);
+            const classId = document.getElementById('enrollClassId').value;
+            const studentId = document.getElementById('enrollStudentId').value;
+
+            console.log('📝 Enrolling student:', studentId, 'to class:', classId);
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+
+            try {
+                const response = await API.enrollStudent(classId, parseInt(studentId));
+
+                if (response.status === 'success') {
+                    alert('✅ ' + (response.message || 'Mahasiswa berhasil didaftarkan'));
+                    bootstrap.Modal.getInstance(document.getElementById('enrollModal')).hide();
+                    console.log('✅ Student enrolled');
+                } else {
+                    alert('❌ ' + (response.message || 'Gagal mendaftarkan mahasiswa'));
+                }
+            } catch (error) {
+                alert('❌ Terjadi kesalahan: ' + error.message);
+                console.error('Enroll error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Daftarkan';
+            }
+        });
     }
-}
+});
 
 async function viewClassAttendance(classId) {
+    console.log('📊 Loading attendance for class:', classId);
+
     try {
         const response = await API.getClassAttendance(classId);
 
@@ -673,17 +823,21 @@ async function viewClassAttendance(classId) {
             const attendances = response.data;
             const classInfo = response.class;
 
-            console.log('Attendance data:', attendances);
-            alert(`Total absensi: ${attendances.length} records`);
-            // You can create a modal to show detailed attendance
+            alert(`Kelas: ${classInfo.course.course_name}\nTotal absensi: ${attendances.length} records\n\nLihat di console untuk detail lengkap.`);
+            console.table(attendances);
+            console.log('✅ Attendance loaded:', attendances.length);
         }
     } catch (error) {
-        alert('Error: ' + error.message);
+        alert('❌ Error: ' + error.message);
+        console.error('Load attendance error:', error);
     }
 }
 
-// Attendance Page (Mahasiswa)
+// ==================== ATTENDANCE PAGE ====================
+
 async function showAttendance() {
+    console.log('📋 Loading attendance history page...');
+
     hideAllPages();
     document.getElementById('attendancePage').style.display = 'block';
     await loadAttendanceHistory();
@@ -691,7 +845,7 @@ async function showAttendance() {
 
 async function loadAttendanceHistory() {
     const tbody = document.getElementById('attendanceTableBody');
-    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Loading...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center"><span class="spinner-border spinner-border-sm"></span> Loading...</td></tr>';
 
     try {
         const response = await API.getHistory();
@@ -707,27 +861,40 @@ async function loadAttendanceHistory() {
             tbody.innerHTML = '';
             history.forEach(att => {
                 const row = document.createElement('tr');
-                const statusBadge = getStatusBadge(att.status);
+
+                const statusClass = att.status === 'hadir' ? 'success' :
+                                   att.status === 'izin' ? 'warning' :
+                                   att.status === 'sakit' ? 'info' : 'danger';
+
                 const courseName = att.class?.course?.course_name || 'N/A';
-                const date = new Date(att.date).toLocaleDateString('id-ID');
+                const date = new Date(att.date).toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
                 const checkIn = att.check_in_time
                     ? new Date(att.check_in_time).toLocaleTimeString('id-ID',
-                        {hour: '2-digit', minute: '2-digit'})
+                        {hour: '2-digit', minute: '2-digit', second: '2-digit'})
                     : '-';
+
                 const checkOut = att.check_out_time
                     ? new Date(att.check_out_time).toLocaleTimeString('id-ID',
-                        {hour: '2-digit', minute: '2-digit'})
+                        {hour: '2-digit', minute: '2-digit', second: '2-digit'})
                     : '-';
 
                 row.innerHTML = `
                     <td>${date}</td>
-                    <td>${courseName}</td>
-                    <td>${checkIn}</td>
-                    <td>${checkOut}</td>
-                    <td><span class="badge ${statusBadge.class}">${statusBadge.text}</span></td>
+                    <td><strong>${courseName}</strong></td>
+                    <td><small>${checkIn}</small></td>
+                    <td><small>${checkOut}</small></td>
+                    <td><span class="badge bg-${statusClass}">${att.status.toUpperCase()}</span></td>
                 `;
                 tbody.appendChild(row);
             });
+
+            console.log('✅ Attendance history loaded:', history.length);
         }
     } catch (error) {
         tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error loading data</td></tr>';
@@ -735,45 +902,55 @@ async function loadAttendanceHistory() {
     }
 }
 
-// Profile Page
-async function showProfile() {
+// ==================== PROFILE PAGE ====================
+
+function showProfile() {
+    console.log('👤 Loading profile page...');
+
     hideAllPages();
     document.getElementById('profilePage').style.display = 'block';
 
+    // Populate profile data
     document.getElementById('profileName').textContent = currentUser.name;
+    document.getElementById('profileRoleBadge').textContent = currentUser.role.toUpperCase();
     document.getElementById('profileEmail').textContent = currentUser.email;
-    document.getElementById('profileRole').textContent =
-        currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+    document.getElementById('profileRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
 
+    // Show NPM if mahasiswa
     if (currentUser.npm) {
         document.getElementById('profileNPMRow').style.display = 'table-row';
         document.getElementById('profileNPM').textContent = currentUser.npm;
+    } else {
+        document.getElementById('profileNPMRow').style.display = 'none';
+    }
+
+    // Format created date
+    if (currentUser.created_at) {
+        const createdDate = new Date(currentUser.created_at).toLocaleDateString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        document.getElementById('profileCreated').textContent = createdDate;
+    } else {
+        document.getElementById('profileCreated').textContent = '-';
     }
 }
 
-// Helper Functions
-function showAlert(elementId, message, type) {
-    const alert = document.getElementById(elementId);
-    alert.className = `alert alert-${type} alert-dismissible fade show`;
-    alert.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    alert.style.display = 'block';
+// ==================== INITIALIZATION ====================
 
-    setTimeout(() => {
-        alert.style.display = 'none';
-    }, 5000);
-}
+// Auto-submit login form on Enter
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
 
-function getStatusBadge(status) {
-    const badges = {
-        'hadir': { text: 'Hadir', class: 'bg-success' },
-        'izin': { text: 'Izin', class: 'bg-warning text-dark' },
-        'sakit': { text: 'Sakit', class: 'bg-info' },
-        'alpha': { text: 'Alpha', class: 'bg-danger' },
-        'Belum Absen': { text: 'Belum Absen', class: 'bg-secondary' }
-    };
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
+    }
+});
 
-    return badges[status] || { text: status, class: 'bg-secondary' };
-}
+console.log('✅ App Module fully loaded');
