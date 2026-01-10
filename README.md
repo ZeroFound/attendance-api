@@ -11,7 +11,7 @@
 
 **REST API untuk sistem pencatatan kehadiran mahasiswa dengan validasi GPS dan autentikasi JWT**
 
-[Live Demo](https://api-absensi-mahasiswa.up.railway.app/) · [Dokumentasi API](https://documenter.getpostman.com/view/37522624/2sBXVfiBEM) · [Report Bug](https://github.com/username/attendance-api/issues) · [Request Feature](https://github.com/username/attendance-api/issues)
+[Live Demo](https://api-absensi-mahasiswa.up.railway.app/) · [Dokumentasi API](https://documenter.getpostman.com/view/37522624/2sBXVfiBEM) · [Report Bug](https://github.com/ZeroFound/attendance-api.git) · [Request Feature](https://github.com/ZeroFound/attendance-api.git)
 
 </div>
 
@@ -158,7 +158,7 @@ Oleh karena itu, kami mengembangkan sistem absensi digital dengan fitur validasi
 ### Screenshots
 
 ```
-Coming Soon - Add your API testing screenshots here
+![1768054755504](image/README_FULL/1768054755504.png)
 ```
 
 ---
@@ -2060,7 +2060,7 @@ Brief description of changes
 
 ```bash
 # Fork & clone
-git clone https://github.com/your-username/attendance-api.git
+git clone https://github.com/ZeroFound/attendance-api.git
 cd attendance-api
 
 # Install dependencies
@@ -2112,11 +2112,12 @@ SOFTWARE.
 
 **Developer:** Andrian
 
-**Email:** your.email@example.com
+**Email:** andrianwahyusyahputra05@gmail.com
 
-**GitHub:** [@yourusername](https://github.com/yourusername)
 
-**LinkedIn:** [Your Name](https://linkedin.com/in/yourprofile)
+**GitHub:** [@ZeroFound](https://github.com/ZeroFound/attendance-api.git)
+
+**LinkedIn:** [Andrian Wahyu Syahputra](https://www.linkedin.com/in/andrian-wahyu-syahputra-97a390335/)
 
 **Project Link:** [https://github.com/yourusername/attendance-api](https://github.com/yourusername/attendance-api)
 
