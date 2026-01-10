@@ -2118,7 +2118,7 @@ SOFTWARE.
 
 **LinkedIn:** [Andrian Wahyu Syahputra](https://www.linkedin.com/in/andrian-wahyu-syahputra-97a390335/)
 
-**Project Link:** [https://github.com/yourusername/attendance-api](https://github.com/yourusername/attendance-api)
+**Project Link:** [https://github.com/ZeroFound/attendance-api.git](https://github.com/ZeroFound/attendance-api.git)
 
 **API Documentation:** [Postman Collection](https://documenter.getpostman.com/view/37522624/2sBXVfiBEM)
 
