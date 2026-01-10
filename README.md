@@ -76,16 +76,13 @@ Oleh karena itu, kami mengembangkan sistem absensi digital dengan fitur validasi
 
 #### 📚 Course Management
 - CRUD mata kuliah
-- Penjadwalan otomatis
-- Manajemen SKS dan semester
-- Kategori mata kuliah (Wajib/Pilihan)
 
 #### 🏫 Class Management
 - Buat dan kelola kelas
 - Daftarkan mahasiswa ke kelas
 - Set lokasi GPS untuk setiap kelas
-- Jadwal pertemuan otomatis
-- Kapasitas kelas
+
+
 
 #### ✅ Attendance System
 - Check-in dengan validasi GPS
@@ -103,11 +100,7 @@ Oleh karena itu, kami mengembangkan sistem absensi digital dengan fitur validasi
 - Attendance percentage calculation
 - Early warning system untuk absensi rendah
 
-#### 🔔 Notifications (Upcoming)
-- Push notification untuk reminder
-- Email notification untuk laporan
-- SMS gateway integration
-- WhatsApp notification
+
 
 ### 🏗️ Built With
 
