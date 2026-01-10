@@ -157,10 +157,8 @@ Oleh karena itu, kami mengembangkan sistem absensi digital dengan fitur validasi
 
 ### Screenshots
 
-```
-<img width="2880" height="1724" alt="screencapture-api-absensi-mahasiswa-up-railway-app-2026-01-10-22_10_21" src="https://github.com/user-attachments/assets/9550d05c-2d68-40e3-b52e-b20e54c2dabb" />
+<img width="2880" height="1724" alt="screencapture-api-absensi-mahasiswa-up-railway-app-2026-01-10-22_10_21" src="https://github.com/user-attachments/assets/10f0c3da-e982-4b5a-98a9-1611a5106a34" />
 
-```
 
 ---
 
