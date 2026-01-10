@@ -11,7 +11,7 @@
 
 **REST API untuk sistem pencatatan kehadiran mahasiswa dengan validasi GPS dan autentikasi JWT**
 
-[Live Demo](https://api-absensi-mahasiswa.up.railway.app/) · [Dokumentasi API](https://documenter.getpostman.com/view/37522624/2sBXVfiBEM)
+[Live Demo](https://api-absensi-mahasiswa.up.railway.app/) · [Dokumentasi API](https://documenter.getpostman.com/view/37522624/2sBXVfiBEM) · [Report Bug](https://github.com/username/attendance-api/issues) · [Request Feature](https://github.com/username/attendance-api/issues)
 
 </div>
 
@@ -1987,31 +1987,6 @@ tail -f storage/logs/laravel.log
 - [x] Role-based Authorization
 - [x] Attendance Statistics
 
-### Version 1.1 (Q1 2026) 🚧
-- [ ] Email Notifications
-- [ ] Attendance Reports Export (PDF/Excel)
-- [ ] QR Code Check-in (Alternative)
-- [ ] Face Recognition Integration
-- [ ] Dashboard Analytics
-- [ ] Mobile App Support
-
-### Version 1.2 (Q2 2026) 📅
-- [ ] Push Notifications
-- [ ] Real-time Updates (WebSocket)
-- [ ] Attendance Prediction (ML)
-- [ ] Multi-language Support
-- [ ] Advanced Reporting
-- [ ] API Rate Limiting per User
-
-### Version 2.0 (Q3 2026) 🎯
-- [ ] WhatsApp Integration
-- [ ] SMS Gateway
-- [ ] Biometric Authentication
-- [ ] IoT Device Integration
-- [ ] Blockchain Certificate
-- [ ] GraphQL API Support
-
----
 
 ## 🤝 Contributing
 
@@ -2135,15 +2110,15 @@ SOFTWARE.
 
 ## 📞 Contact
 
-**Developer:** Andrian Wahyu Syahputra
+**Developer:** Andrian
 
-**Email:** andrianwahyusyahputra05@gmail.com
+**Email:** your.email@example.com
 
-**GitHub:** [@yourusername](https://github.com/ZeroFound)
+**GitHub:** [@yourusername](https://github.com/yourusername)
 
-**LinkedIn:** [Andrian Wahyu Syahputra]([https://linkedin.com/in/yourprofile](https://www.linkedin.com/in/andrian-wahyu-syahputra-97a390335/))
+**LinkedIn:** [Your Name](https://linkedin.com/in/yourprofile)
 
-**Project Link:** [https://github.com/ZeroFound/attendance-api]([https://github.com/yourusername/attendance-api](https://github.com/ZeroFound/attendance-api.git))
+**Project Link:** [https://github.com/yourusername/attendance-api](https://github.com/yourusername/attendance-api)
 
 **API Documentation:** [Postman Collection](https://documenter.getpostman.com/view/37522624/2sBXVfiBEM)
 
