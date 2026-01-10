@@ -95,8 +95,6 @@ Oleh karena itu, kami mengembangkan sistem absensi digital dengan fitur validasi
 #### 📊 Reporting & Analytics
 - Rekap kehadiran per mahasiswa
 - Statistik kehadiran per kelas
-- Export ke Excel/PDF
-- Grafik visualisasi kehadiran
 - Attendance percentage calculation
 - Early warning system untuk absensi rendah
 
