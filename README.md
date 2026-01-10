@@ -11,7 +11,7 @@
 
 **REST API untuk sistem pencatatan kehadiran mahasiswa dengan validasi GPS dan autentikasi JWT**
 
-[Live Demo](https://api-absensi-mahasiswa.up.railway.app/) · [Dokumentasi API](https://documenter.getpostman.com/view/37522624/2sBXVfiBEM) · [Report Bug](https://github.com/username/attendance-api/issues) · [Request Feature](https://github.com/username/attendance-api/issues)
+[Live Demo](https://api-absensi-mahasiswa.up.railway.app/) · [Dokumentasi API](https://documenter.getpostman.com/view/37522624/2sBXVfiBEM)
 
 </div>
 
@@ -2135,15 +2135,15 @@ SOFTWARE.
 
 ## 📞 Contact
 
-**Developer:** Andrian
+**Developer:** Andrian Wahyu Syahputra
 
-**Email:** your.email@example.com
+**Email:** andrianwahyusyahputra05@gmail.com
 
-**GitHub:** [@yourusername](https://github.com/yourusername)
+**GitHub:** [@yourusername](https://github.com/ZeroFound)
 
-**LinkedIn:** [Your Name](https://linkedin.com/in/yourprofile)
+**LinkedIn:** [Andrian Wahyu Syahputra]([https://linkedin.com/in/yourprofile](https://www.linkedin.com/in/andrian-wahyu-syahputra-97a390335/))
 
-**Project Link:** [https://github.com/yourusername/attendance-api](https://github.com/yourusername/attendance-api)
+**Project Link:** [https://github.com/ZeroFound/attendance-api]([https://github.com/yourusername/attendance-api](https://github.com/ZeroFound/attendance-api.git))
 
 **API Documentation:** [Postman Collection](https://documenter.getpostman.com/view/37522624/2sBXVfiBEM)
 
